@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>轮回指数 · 狩诸待To — 市场情绪量化终端</title>
-  <meta name="description" content="轮回指数（狩诸待To）——市场情绪量化终端：恐惧贪婪指数、A股/ETF/美股/加密货币行情、专业K线、140+行业主线强度、市场宽度与温度、策略回测。" />
+  <meta name="description" content="轮回指数（狩诸待To）——市场情绪量化终端：恐惧贪婪指数、A 股/ETF/美股/加密货币行情、专业 K 线、130+ 行业主线强度、市场宽度与温度、策略回测。" />
 
   <!-- Open Graph / 社交分享卡片 -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="轮回指数 · 狩诸待To — 市场情绪量化终端" />
-  <meta property="og:description" content="恐惧贪婪指数 · 专业K线 · 行业主线 · 市场宽度 · 策略回测——多市场量化数据一屏尽览。" />
+  <meta property="og:description" content="恐惧贪婪指数 · 专业 K 线 · 行业主线 · 市场宽度 · 策略回测——多市场量化数据一屏尽览。" />
   <meta property="og:url" content="https://cycleindex-szdto.github.io/" />
   <meta property="og:image" content="https://cycleindex-szdto.github.io/images/home-greedfear.png" />
   <meta property="og:site_name" content="轮回指数 SZD Cycle Index" />
@@ -84,7 +84,7 @@
     }
     .nav-logo-text .cn { font-size: 16px; font-weight: 700; letter-spacing: 0.06em; }
     .nav-logo-text .en {
-      font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.22em;
+      font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.2em;
       color: var(--muted); text-transform: uppercase;
     }
 
@@ -222,7 +222,6 @@
     }
     .stats-grid {
       display: grid; grid-template-columns: repeat(4, 1fr);
-      divide: 1px;
     }
     .stat {
       padding: 26px 18px;
@@ -275,12 +274,25 @@
       box-shadow: 0 18px 60px rgba(2, 6, 17, 0.7), 0 0 0 1px rgba(56, 189, 248, 0.12);
     }
 
+    /* 卡片整体可点击/可聚焦的原生按钮层（键盘无障碍 + a11y 树规范） */
+    .card-open {
+      position: absolute; inset: 0; z-index: 5;
+      background: none; border: none; cursor: pointer;
+      border-radius: inherit;
+    }
+    .card-open:focus-visible {
+      outline: 2px solid rgba(56, 189, 248, 0.6);
+      outline-offset: 3px;
+    }
+
     /* 打通网格：首卡全宽 */
     .card.featured { grid-column: 1 / -1; }
 
     .card-shot { position: relative; overflow: hidden; background: #0a0f1d; }
     .card-shot img {
       width: 100%; height: auto;
+      /* 16:9 占位防滚动加载布局偏移（CLS） */
+      aspect-ratio: 16 / 9;
       transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), filter 0.4s ease;
       filter: saturate(0.96) brightness(0.97);
     }
@@ -362,13 +374,17 @@
       background: rgba(4, 7, 14, 0.92);
       backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
       display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.28s ease;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      /* 关闭：等 opacity 退场后再隐藏；打开：visibility 立即生效（focus 可用） */
+      transition: opacity 0.28s ease, visibility 0s 0.28s;
     }
-    .lightbox.active { opacity: 1; pointer-events: all; }
+    .lightbox.active {
+      opacity: 1; visibility: visible; pointer-events: all;
+      transition: opacity 0.28s ease, visibility 0s 0s;
+    }
 
     .lightbox img {
-      max-width: 92vw; max-height: 86vh;
+      max-width: 92vw; max-height: 78vh; /* 为底部说明文字预留空间，避免遮挡 */
       border-radius: 10px;
       border: 1px solid rgba(148, 163, 184, 0.18);
       box-shadow: 0 30px 100px rgba(0, 0, 0, 0.85);
@@ -393,6 +409,8 @@
 
     .lb-close {
       position: absolute; top: 18px; right: 24px;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
       background: none; border: none; cursor: pointer;
       color: var(--muted); font-size: 26px; line-height: 1;
       transition: color 0.2s ease, transform 0.2s ease;
@@ -428,9 +446,17 @@
     @media (max-width: 540px) {
       .hero { padding: 68px 20px 60px; }
       .hero-candles { height: 40px; gap: 7px; margin-bottom: 26px; }
+      .hero-eyebrow { font-size: 11px; letter-spacing: 0.18em; }  /* 保证 390px 单行 */
       .hero-actions .btn { width: 100%; justify-content: center; }
-      .lb-nav { display: none; }
-      .card-zoom { opacity: 1; }  /* 触屏无 hover，常显角标 */
+      /* 小屏不隐藏灯箱箭头，缩小贴边保证触屏可切换 */
+      .lb-nav { width: 38px; height: 38px; font-size: 16px; }
+      .lb-prev { left: 10px; }
+      .lb-next { right: 10px; }
+    }
+
+    /* 触屏设备（无论宽度）常显放大角标 */
+    @media (hover: none) {
+      .card-zoom { opacity: 1; }
     }
 
     /* 减弱动态效果偏好 */
@@ -446,7 +472,7 @@
   <!-- ═══ 顶部导航 ═══ -->
   <nav class="nav" id="nav">
     <div class="wrap nav-inner">
-      <a class="nav-logo" href="#top" aria-label="轮回指数 首页">
+      <a class="nav-logo" href="#top">
         <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <rect width="32" height="32" rx="7" fill="#0b1120" stroke="rgba(56,189,248,0.4)"/>
           <path d="M9 22 L14 12 L18 18 L23 8" stroke="#38bdf8" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
@@ -500,10 +526,10 @@
     <div class="wrap stats-grid">
       <div class="stat">
         <div class="stat-val">4<span class="u">市场</span></div>
-        <div class="stat-label">A股 · ETF · 美股 · 加密货币</div>
+        <div class="stat-label">A 股 · ETF · 美股 · 加密货币</div>
       </div>
       <div class="stat">
-        <div class="stat-val">140<span class="u">+</span></div>
+        <div class="stat-val">130<span class="u">+</span></div>
         <div class="stat-label">行业主线强度跟踪</div>
       </div>
       <div class="stat">
@@ -518,7 +544,7 @@
   </section>
 
   <!-- ═══ 功能画廊 ═══ -->
-  <section class="gallery-section wrap" id="gallery">
+  <main class="gallery-section wrap" id="gallery">
     <div class="section-head">
       <p class="section-eyebrow">Terminal Modules</p>
       <h2 class="section-title">终端功能一览</h2>
@@ -545,18 +571,18 @@
         </div>
         <figcaption class="card-info">
           <span class="card-title"><span class="card-no">02</span>股票 K 线终端</span>
-          <span class="card-desc">专业蜡烛图与多指标副图，关联财报、直播与贪恐评级</span>
+          <span class="card-desc">专业蜡烛图与多指标副图，关联财务报表与贪恐评级</span>
         </figcaption>
       </figure>
 
       <figure class="card" data-src="images/crypto-kline.png" data-caption="加密货币 K 线 · BTC/USDT">
         <div class="card-shot">
-          <img src="images/crypto-kline.png" alt="BTC USDT 加密货币K线页：蜡烛图、盘口与成交记录" loading="lazy" />
+          <img src="images/crypto-kline.png" alt="BTC USDT 加密货币K线页：蜡烛图、贪恐仪表与市场总览" loading="lazy" />
           <span class="card-zoom">⤢ 放大</span>
         </div>
         <figcaption class="card-info">
           <span class="card-title"><span class="card-no">03</span>加密货币终端</span>
-          <span class="card-desc">币安实时行情：K 线、深度盘口与成交流水</span>
+          <span class="card-desc">币安实时行情：K 线、多指标副图与贪恐仪表</span>
         </figcaption>
       </figure>
 
@@ -567,7 +593,7 @@
         </div>
         <figcaption class="card-info">
           <span class="card-title"><span class="card-no">04</span>主线板块</span>
-          <span class="card-desc">140+ 行业主线强度排行：涨跌结构、强势股 TOP3、资金流净额</span>
+          <span class="card-desc">130+ 行业主线强度排行：涨跌结构、强势股 TOP3、资金流净额</span>
         </figcaption>
       </figure>
 
@@ -582,13 +608,13 @@
         </figcaption>
       </figure>
 
-      <figure class="card" data-src="images/stocks-list.png" data-caption="A股筛选列表 · ETF / 股票">
+      <figure class="card" data-src="images/stocks-list.png" data-caption="A 股筛选列表 · ETF / 股票">
         <div class="card-shot">
-          <img src="images/stocks-list.png" alt="A股列表页：ETF 与股票筛选、实时涨跌、贪恐评级列" loading="lazy" />
+          <img src="images/stocks-list.png" alt="A 股列表页：ETF 与股票筛选、实时涨跌、贪恐评级列" loading="lazy" />
           <span class="card-zoom">⤢ 放大</span>
         </div>
         <figcaption class="card-info">
-          <span class="card-title"><span class="card-no">06</span>A股筛选列表</span>
+          <span class="card-title"><span class="card-no">06</span>A 股筛选列表</span>
           <span class="card-desc">全市场 A 股与 ETF 扫描：多维筛选、实时涨跌、贪恐评级</span>
         </figcaption>
       </figure>
@@ -627,7 +653,7 @@
       </figure>
 
     </div>
-  </section>
+  </main>
 
   <!-- ═══ CTA 收尾 ═══ -->
   <section class="cta-section">
@@ -672,22 +698,31 @@
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
+          const el = entry.target;
           // 按同批可见序号交错延迟
-          entry.target.style.transitionDelay = `${(entries.indexOf(entry) % 4) * 0.06}s`;
-          entry.target.classList.add('visible');
-          io.unobserve(entry.target);
+          el.style.transitionDelay = `${(entries.indexOf(entry) % 4) * 0.06}s`;
+          el.classList.add('visible');
+          // 入场完成后清除交错延迟，避免拖慢后续 hover 过渡
+          const clearDelay = () => el.style.removeProperty('transition-delay');
+          el.addEventListener('transitionend', clearDelay, { once: true });
+          setTimeout(clearDelay, 1200); /* 兜底 */
+          io.unobserve(el);
         }
       });
     }, { threshold: 0.12 });
     cards.forEach((c) => io.observe(c));
 
-    /* ═══ 灯箱：打开 / 关闭 / 前后切换 / 键盘 ═══ */
+    /* ═══ 灯箱：打开 / 关闭 / 前后切换 / 键盘 / 触摸 ═══ */
     const lightbox = document.getElementById('lightbox');
     const lbImg = document.getElementById('lb-img');
     const lbCaption = document.getElementById('lb-caption');
     const lbCounter = document.getElementById('lb-counter');
+    const lbCloseBtn = document.getElementById('lb-close');
+    const lbPrevBtn = document.getElementById('lb-prev');
+    const lbNextBtn = document.getElementById('lb-next');
     let lbList = [];
     let lbIndex = -1;
+    let lbOpener = null; /* 打开灯箱的卡片，关闭时归还焦点 */
 
     function renderLb() {
       const item = lbList[lbIndex];
@@ -698,17 +733,21 @@
       lbCounter.textContent = String(lbIndex + 1).padStart(2, '0') + ' / ' + String(lbList.length).padStart(2, '0');
     }
 
-    function openLb(startIndex) {
+    function openLb(startIndex, opener) {
+      lbOpener = opener || null;
       lbIndex = startIndex;
       renderLb();
       lightbox.classList.add('active');
       document.body.style.overflow = 'hidden';
+      lbCloseBtn.focus(); /* 焦点移入灯箱 */
     }
 
     function closeLb() {
       lightbox.classList.remove('active');
       document.body.style.overflow = '';
       lbIndex = -1;
+      if (lbOpener && typeof lbOpener.focus === 'function') lbOpener.focus(); /* 焦点归还触发卡片 */
+      lbOpener = null;
     }
 
     function stepLb(delta) {
@@ -727,19 +766,48 @@
       };
     });
 
-    cards.forEach((card, i) => card.addEventListener('click', () => openLb(i)));
+    // 卡片：内嵌全覆盖原生按钮，点击与键盘（Enter/Space）原生可达
+    cards.forEach((card, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'card-open';
+      btn.setAttribute('aria-label', '放大查看：' + lbList[i].caption);
+      btn.addEventListener('click', () => openLb(i, btn));
+      card.appendChild(btn);
+    });
 
-    document.getElementById('lb-close').addEventListener('click', closeLb);
-    document.getElementById('lb-prev').addEventListener('click', (e) => { e.stopPropagation(); stepLb(-1); });
-    document.getElementById('lb-next').addEventListener('click', (e) => { e.stopPropagation(); stepLb(1); });
+    lbCloseBtn.addEventListener('click', closeLb);
+    lbPrevBtn.addEventListener('click', (e) => { e.stopPropagation(); stepLb(-1); });
+    lbNextBtn.addEventListener('click', (e) => { e.stopPropagation(); stepLb(1); });
 
     lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLb(); });
 
+    // 触摸横滑切换上一张/下一张
+    let touchStartX = null;
+    lightbox.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    lightbox.addEventListener('touchend', (e) => {
+      if (touchStartX === null) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40) stepLb(dx < 0 ? 1 : -1);
+      touchStartX = null;
+    }, { passive: true });
+
+    // 键盘：ESC 关闭、方向键切换、Tab 焦点圈禁在灯箱内
+    const lbFocusables = [lbCloseBtn, lbPrevBtn, lbNextBtn];
     document.addEventListener('keydown', (e) => {
       if (!lightbox.classList.contains('active')) return;
       if (e.key === 'Escape') closeLb();
       else if (e.key === 'ArrowLeft') stepLb(-1);
       else if (e.key === 'ArrowRight') stepLb(1);
+      else if (e.key === 'Tab') {
+        e.preventDefault();
+        const idx = lbFocusables.indexOf(document.activeElement);
+        const next = e.shiftKey
+          ? (idx <= 0 ? lbFocusables.length - 1 : idx - 1)
+          : (idx === lbFocusables.length - 1 ? 0 : idx + 1);
+        lbFocusables[next].focus();
+      }
     });
   </script>
 </body>
