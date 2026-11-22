@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>轮回指数 · 狩诸待To — 市场情绪量化终端</title>
+  <meta name="description" content="轮回指数（狩诸待To）——市场情绪量化终端：恐惧贪婪指数、A股/ETF/美股/加密货币行情、专业K线、140+行业主线强度、市场宽度与温度、策略回测。" />
+
+  <!-- Open Graph / 社交分享卡片 -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="轮回指数 · 狩诸待To — 市场情绪量化终端" />
+  <meta property="og:description" content="恐惧贪婪指数 · 专业K线 · 行业主线 · 市场宽度 · 策略回测——多市场量化数据一屏尽览。" />
+  <meta property="og:url" content="https://cycleindex-szdto.github.io/" />
+  <meta property="og:image" content="https://cycleindex-szdto.github.io/images/home-greedfear.png" />
+  <meta property="og:site_name" content="轮回指数 SZD Cycle Index" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1120'/%3E%3Cpath d='M9 22 L14 12 L18 18 L23 8' stroke='%2338bdf8' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+
+  <style>
+    /* ═══════════════ 基础与变量 ═══════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #070b14;          /* 近黑深蓝底 */
+      --bg-2: #0b1120;
+      --surface: #0d1424;     /* 卡片面 */
+      --surface-2: #111a2e;
+      --border: rgba(148, 163, 184, 0.13);
+      --border-hi: rgba(56, 189, 248, 0.45);
+      --text: #e8eefb;
+      --muted: #8b98b4;
+      --accent: #38bdf8;      /* 电光天蓝 */
+      --accent-2: #818cf8;    /* 靛蓝 */
+      --up: #34d399;          /* 绿涨（全站约定） */
+      --down: #f87171;        /* 红跌 */
+      --grad: linear-gradient(135deg, #38bdf8, #818cf8);
+      --mono: "SF Mono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+              "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: rgba(56, 189, 248, 0.28); }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; }
+
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
+
+    /* ═══════════════ 顶部导航 ═══════════════ */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(7, 11, 20, 0.72);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .nav.scrolled { border-bottom-color: var(--border); background: rgba(7, 11, 20, 0.88); }
+
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+
+    .nav-logo { display: flex; align-items: center; gap: 11px; }
+
+    .nav-logo svg { width: 30px; height: 30px; flex-shrink: 0; }
+
+    .nav-logo-text {
+      display: flex; flex-direction: column; line-height: 1.15;
+    }
+    .nav-logo-text .cn { font-size: 16px; font-weight: 700; letter-spacing: 0.06em; }
+    .nav-logo-text .en {
+      font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.22em;
+      color: var(--muted); text-transform: uppercase;
+    }
+
+    .nav-cta {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 13.5px; font-weight: 600; letter-spacing: 0.02em;
+      padding: 8px 18px; border-radius: 8px;
+      color: #06101f; background: var(--grad);
+      box-shadow: 0 2px 18px rgba(56, 189, 248, 0.28);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 26px rgba(56, 189, 248, 0.42); }
+
+    /* ═══════════════ HERO 首屏 ═══════════════ */
+    .hero {
+      position: relative;
+      padding: 96px 28px 84px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* 网格底纹 + 光晕 */
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(148, 163, 184, 0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.055) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(ellipse 75% 65% at 50% 30%, #000 30%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 30%, #000 30%, transparent 75%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 46% 38% at 50% 0%, rgba(56, 189, 248, 0.13), transparent 70%),
+        radial-gradient(ellipse 36% 30% at 72% 24%, rgba(129, 140, 248, 0.10), transparent 70%),
+        radial-gradient(ellipse 30% 26% at 24% 30%, rgba(52, 211, 153, 0.06), transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner { position: relative; z-index: 1; max-width: 880px; margin: 0 auto; }
+
+    /* 蜡烛图装饰 */
+    .hero-candles {
+      display: flex; align-items: flex-end; justify-content: center; gap: 10px;
+      height: 56px; margin-bottom: 34px;
+      opacity: 0.85;
+    }
+    .candle { position: relative; width: 7px; border-radius: 1.5px; }
+    .candle::before { /* 影线 */
+      content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+      width: 1.5px; background: inherit; opacity: 0.55;
+    }
+    .candle.up { background: var(--up); }
+    .candle.up::before { top: -9px; bottom: -9px; }
+    .candle.down { background: var(--down); }
+    .candle.down::before { top: -7px; bottom: -7px; }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 12px; letter-spacing: 0.34em; text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: clamp(44px, 8vw, 88px);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      line-height: 1.08;
+      margin-bottom: 18px;
+    }
+    .hero-title .grad {
+      background: var(--grad);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; color: transparent;
+    }
+
+    .hero-sub {
+      font-size: clamp(15px, 2.4vw, 19px);
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 40px;
+    }
+    .hero-sub strong { color: var(--text); font-weight: 600; }
+
+    .hero-actions { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 9px;
+      font-size: 15px; font-weight: 600;
+      padding: 13px 30px; border-radius: 10px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+    .btn-primary {
+      color: #06101f; background: var(--grad);
+      box-shadow: 0 4px 30px rgba(56, 189, 248, 0.32);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(56, 189, 248, 0.48); }
+    .btn-ghost {
+      color: var(--text); border: 1px solid var(--border);
+      background: rgba(148, 163, 184, 0.06);
+    }
+    .btn-ghost:hover { border-color: var(--border-hi); background: rgba(56, 189, 248, 0.08); }
+
+    /* 实时心跳小徽标 */
+    .hero-live {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 34px;
+      font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.12em;
+      color: var(--muted);
+      border: 1px solid var(--border); border-radius: 99px;
+      padding: 6px 16px;
+    }
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--up);
+      box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.5); }
+      70% { box-shadow: 0 0 0 9px rgba(52, 211, 153, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+    }
+
+    /* ═══════════════ 数据亮点条 ═══════════════ */
+    .stats {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: rgba(13, 20, 36, 0.5);
+    }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      divide: 1px;
+    }
+    .stat {
+      padding: 26px 18px;
+      text-align: center;
+      border-left: 1px solid var(--border);
+    }
+    .stat:first-child { border-left: none; }
+    .stat-val {
+      font-family: var(--mono);
+      font-size: clamp(20px, 3vw, 27px); font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .stat-val .u { font-size: 0.55em; color: var(--accent); margin-left: 2px; }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 6px; letter-spacing: 0.05em; }
+
+    /* ═══════════════ 画廊区 ═══════════════ */
+    .gallery-section { padding: 88px 0 30px; }
+
+    .section-head { text-align: center; margin-bottom: 52px; }
+    .section-eyebrow {
+      font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+    }
+    .section-title { font-size: clamp(28px, 4.6vw, 42px); font-weight: 700; letter-spacing: 0.02em; }
+    .section-desc { color: var(--muted); margin-top: 12px; font-size: 15.5px; }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 26px;
+    }
+
+    .card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      /* 入场动画：初始隐藏，交错浮现 */
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card.visible { opacity: 1; transform: translateY(0); }
+
+    .card:hover {
+      border-color: var(--border-hi);
+      box-shadow: 0 18px 60px rgba(2, 6, 17, 0.7), 0 0 0 1px rgba(56, 189, 248, 0.12);
+    }
+
+    /* 打通网格：首卡全宽 */
+    .card.featured { grid-column: 1 / -1; }
+
+    .card-shot { position: relative; overflow: hidden; background: #0a0f1d; }
+    .card-shot img {
+      width: 100%; height: auto;
+      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), filter 0.4s ease;
+      filter: saturate(0.96) brightness(0.97);
+    }
+    .card:hover .card-shot img { transform: scale(1.018); filter: saturate(1.04) brightness(1.02); }
+
+    /* 点击放大角标 */
+    .card-zoom {
+      position: absolute; top: 14px; right: 14px;
+      display: flex; align-items: center; gap: 6px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+      color: #cfe7fb;
+      background: rgba(7, 11, 20, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 7px; padding: 5px 11px;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .card:hover .card-zoom { opacity: 1; }
+
+    .card-info {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+      padding: 18px 22px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .card-title { font-size: 17px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap; }
+    .card-desc { font-size: 13.5px; color: var(--muted); text-align: right; line-height: 1.5; }
+
+    .featured .card-info {
+      flex-direction: row; align-items: center;
+      padding: 20px 26px;
+    }
+    .featured .card-title { font-size: 20px; }
+    .featured .card-desc { font-size: 14.5px; }
+
+    /* 卡片编号 */
+    .card-no {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+      color: var(--accent); opacity: 0.75; margin-right: 10px;
+    }
+
+    /* ═══════════════ CTA 收尾 ═══════════════ */
+    .cta-section { position: relative; padding: 110px 28px 120px; text-align: center; overflow: hidden; }
+    .cta-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 55% 46% at 50% 100%, rgba(56, 189, 248, 0.12), transparent 70%),
+        radial-gradient(ellipse 40% 34% at 68% 88%, rgba(129, 140, 248, 0.09), transparent 70%);
+      pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 1; }
+    .cta-title { font-size: clamp(26px, 4.4vw, 40px); font-weight: 700; letter-spacing: 0.02em; margin-bottom: 14px; }
+    .cta-desc { color: var(--muted); font-size: 16px; margin-bottom: 38px; }
+    .cta-url {
+      display: inline-block; margin-top: 20px;
+      font-family: var(--mono); font-size: 13px; letter-spacing: 0.1em;
+      color: var(--muted);
+      border-bottom: 1px dashed rgba(148, 163, 184, 0.3);
+      padding-bottom: 2px;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .cta-url:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ═══════════════ 页脚 ═══════════════ */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 34px 28px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+      color: var(--muted); font-size: 12.5px; letter-spacing: 0.06em;
+    }
+    .footer-links { display: flex; align-items: center; gap: 22px; }
+    .footer-links a { transition: color 0.2s ease; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ═══════════════ 灯箱 Lightbox ═══════════════ */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(4, 7, 14, 0.92);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+    .lightbox.active { opacity: 1; pointer-events: all; }
+
+    .lightbox img {
+      max-width: 92vw; max-height: 86vh;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.85);
+      transform: scale(0.965);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .lightbox.active img { transform: scale(1); }
+
+    .lb-caption {
+      position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+      font-size: 14px; color: var(--text); letter-spacing: 0.04em;
+      background: rgba(13, 20, 36, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 18px;
+      max-width: 86vw; text-align: center;
+    }
+    .lb-counter {
+      position: absolute; top: 22px; left: 26px;
+      font-family: var(--mono); font-size: 13px; letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+
+    .lb-close {
+      position: absolute; top: 18px; right: 24px;
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: 26px; line-height: 1;
+      transition: color 0.2s ease, transform 0.2s ease;
+      font-family: var(--mono);
+    }
+    .lb-close:hover { color: var(--accent); transform: rotate(90deg); }
+
+    .lb-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 46px; height: 46px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(13, 20, 36, 0.7);
+      border: 1px solid var(--border);
+      color: var(--text); font-size: 19px; cursor: pointer;
+      transition: border-color 0.2s ease, background 0.2s ease;
+      user-select: none;
+    }
+    .lb-nav:hover { border-color: var(--border-hi); background: rgba(56, 189, 248, 0.12); }
+    .lb-prev { left: 26px; }
+    .lb-next { right: 26px; }
+
+    /* ═══════════════ 响应式 ═══════════════ */
+    @media (max-width: 960px) {
+      .gallery { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(3) { border-left: none; }
+      .stat:nth-child(n+3) { border-top: 1px solid var(--border); }
+      .card-info { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .card-desc { text-align: left; }
+      .footer { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 540px) {
+      .hero { padding: 68px 20px 60px; }
+      .hero-candles { height: 40px; gap: 7px; margin-bottom: 26px; }
+      .hero-actions .btn { width: 100%; justify-content: center; }
+      .lb-nav { display: none; }
+      .card-zoom { opacity: 1; }  /* 触屏无 hover，常显角标 */
+    }
+
+    /* 减弱动态效果偏好 */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .card { opacity: 1; transform: none; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ 顶部导航 ═══ -->
+  <nav class="nav" id="nav">
+    <div class="wrap nav-inner">
+      <a class="nav-logo" href="#top" aria-label="轮回指数 首页">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="32" height="32" rx="7" fill="#0b1120" stroke="rgba(56,189,248,0.4)"/>
+          <path d="M9 22 L14 12 L18 18 L23 8" stroke="#38bdf8" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="nav-logo-text">
+          <span class="cn">轮回指数</span>
+          <span class="en">SZD Cycle Index</span>
+        </span>
+      </a>
+      <a class="nav-cta" href="https://www.szdto.xyz/" target="_blank" rel="noopener">
+        进入平台 <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO 首屏 ═══ -->
+  <header class="hero" id="top">
+    <div class="hero-inner">
+      <!-- 蜡烛图装饰：纯 CSS，绿涨红跌 -->
+      <div class="hero-candles" aria-hidden="true">
+        <div class="candle down" style="height:18px"></div>
+        <div class="candle down" style="height:26px"></div>
+        <div class="candle up" style="height:34px"></div>
+        <div class="candle down" style="height:22px"></div>
+        <div class="candle up" style="height:44px"></div>
+        <div class="candle up" style="height:38px"></div>
+        <div class="candle down" style="height:30px"></div>
+        <div class="candle up" style="height:52px"></div>
+        <div class="candle down" style="height:36px"></div>
+        <div class="candle up" style="height:56px"></div>
+        <div class="candle up" style="height:46px"></div>
+      </div>
+
+      <p class="hero-eyebrow">SZD Cycle Index · Quant Terminal</p>
+      <h1 class="hero-title">轮回指数<span class="grad">.</span></h1>
+      <p class="hero-sub"><strong>狩诸待To</strong> —— 市场情绪量化终端</p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://www.szdto.xyz/" target="_blank" rel="noopener">
+          进入平台 <span aria-hidden="true">→</span>
+        </a>
+        <a class="btn btn-ghost" href="#gallery">浏览功能 <span aria-hidden="true">↓</span></a>
+      </div>
+
+      <div class="hero-live"><span class="live-dot"></span>REALTIME · MARKET SENTIMENT</div>
+    </div>
+  </header>
+
+  <!-- ═══ 数据亮点条 ═══ -->
+  <section class="stats" aria-label="平台亮点">
+    <div class="wrap stats-grid">
+      <div class="stat">
+        <div class="stat-val">4<span class="u">市场</span></div>
+        <div class="stat-label">A股 · ETF · 美股 · 加密货币</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">140<span class="u">+</span></div>
+        <div class="stat-label">行业主线强度跟踪</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">24<span class="u">h</span></div>
+        <div class="stat-label">恐惧贪婪指数实时追踪</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">9<span class="u">模块</span></div>
+        <div class="stat-label">行情 · 情绪 · 板块 · 回测</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ 功能画廊 ═══ -->
+  <section class="gallery-section wrap" id="gallery">
+    <div class="section-head">
+      <p class="section-eyebrow">Terminal Modules</p>
+      <h2 class="section-title">终端功能一览</h2>
+      <p class="section-desc">真实界面实截 · 点击任意截图可放大查看</p>
+    </div>
+
+    <div class="gallery">
+
+      <figure class="card featured" data-src="images/home-greedfear.png" data-caption="恐惧贪婪指数 · 市场情绪总览">
+        <div class="card-shot">
+          <img src="images/home-greedfear.png" alt="恐惧贪婪指数首页：指数仪表、主流加密货币行情卡片与市场总览" loading="lazy" />
+          <span class="card-zoom">⤢ 放大</span>
+        </div>
+        <figcaption class="card-info">
+          <span class="card-title"><span class="card-no">01</span>恐惧贪婪指数</span>
+          <span class="card-desc">市场情绪一屏总览：贪恐指数仪表、主流标的行情卡片、多区域市场概况</span>
+        </figcaption>
+      </figure>
+
+      <figure class="card" data-src="images/stock-kline.png" data-caption="股票 K 线终端 · 贵州茅台">
+        <div class="card-shot">
+          <img src="images/stock-kline.png" alt="贵州茅台股票K线页：蜡烛图、成交量与 MACD 副图" loading="lazy" />
+          <span class="card-zoom">⤢ 放大</span>
+        </div>
+        <figcaption class="card-info">
+          <span class="card-title"><span class="card-no">02</span>股票 K 线终端</span>
+          <span class="card-desc">专业蜡烛图与多指标副图，关联财报、直播与贪恐评级</span>
+        </figcaption>
+      </figure>
+
+      <figure class="card" data-src="images/crypto-kline.png" data-caption="加密货币 K 线 · BTC/USDT">
+        <div class="card-shot">
+          <img src="images/crypto-kline.png" alt="BTC USDT 加密货币K线页：蜡烛图、盘口与成交记录" loading="lazy" />
+          <span class="card-zoom">⤢ 放大</span>
+        </div>
+        <figcaption class="card-info">
+          <span class="card-title"><span class="card-no">03</span>加密货币终端</span>
+          <span class="card-desc">币安实时行情：K 线、深度盘口与成交流水</span>
+        </figcaption>
+      </figure>
+
+      <figure class="card" data-src="images/market-mainline.png" data-caption="主线板块 · 行业主线强度排行">
+        <div class="card-shot">
+          <img src="images/market-mainline.png" alt="主线板块页：行业主线分排行表，含涨跌结构、强势股 TOP3" loading="lazy" />
+          <span class="card-zoom">⤢ 放大</span>
+        </div>
+        <figcaption class="card-info">
+          <span class="card-title"><span class="card-no">04</span>主线板块</span>
+          <span class="card-desc">140+ 行业主线强度排行：涨跌结构、强势股 TOP3、资金流净额</span>
+        </figcaption>
+      </figure>
+
+      <figure class="card" data-src="images/market-sectors.png" data-caption="行业板块体系 · 概念 / 行业 / 地域">
+        <div class="card-shot">
+          <img src="images/market-sectors.png" alt="行业板块体系页：概念、行业、地域三维板块列表与板块指数" loading="lazy" />
+          <span class="card-zoom">⤢ 放大</span>
+        </div>
+        <figcaption class="card-info">
+          <span class="card-title"><span class="card-no">05</span>行业板块体系</span>
+          <span class="card-desc">概念 / 行业 / 地域三维板块全景，板块指数与宽度一览</span>
+        </figcaption>
+      </figure>
+
+      <figure class="card" data-src="images/stocks-list.png" data-caption="A股筛选列表 · ETF / 股票">
+        <div class="card-shot">
+          <img src="images/stocks-list.png" alt="A股列表页：ETF 与股票筛选、实时涨跌、贪恐评级列" loading="lazy" />
+          <span class="card-zoom">⤢ 放大</span>
+        </div>
+        <figcaption class="card-info">
+          <span class="card-title"><span class="card-no">06</span>A股筛选列表</span>
+          <span class="card-desc">全市场 A 股与 ETF 扫描：多维筛选、实时涨跌、贪恐评级</span>
+        </figcaption>
+      </figure>
+
+      <figure class="card" data-src="images/market-temperature.png" data-caption="市场温度 · 情绪温度计">
+        <div class="card-shot">
+          <img src="images/market-temperature.png" alt="市场温度页：温度仪表盘、涨停跌停结构、历史走势" loading="lazy" />
+          <span class="card-zoom">⤢ 放大</span>
+        </div>
+        <figcaption class="card-info">
+          <span class="card-title"><span class="card-no">07</span>市场温度</span>
+          <span class="card-desc">情绪温度计：涨跌停结构、活跃度评分与历史温度走势</span>
+        </figcaption>
+      </figure>
+
+      <figure class="card" data-src="images/market-breadth.png" data-caption="市场宽度 · 涨跌结构趋势">
+        <div class="card-shot">
+          <img src="images/market-breadth.png" alt="市场宽度页：涨跌家数指标卡、宽度趋势图与历史数据" loading="lazy" />
+          <span class="card-zoom">⤢ 放大</span>
+        </div>
+        <figcaption class="card-info">
+          <span class="card-title"><span class="card-no">08</span>市场宽度</span>
+          <span class="card-desc">涨跌家数结构：宽度趋势曲线与逐日历史分布</span>
+        </figcaption>
+      </figure>
+
+      <figure class="card" data-src="images/backtest.png" data-caption="策略回测 · 信号级记录">
+        <div class="card-shot">
+          <img src="images/backtest.png" alt="策略回测页：BTC、ETH、SOL 等回测记录与持仓状态、收益" loading="lazy" />
+          <span class="card-zoom">⤢ 放大</span>
+        </div>
+        <figcaption class="card-info">
+          <span class="card-title"><span class="card-no">09</span>策略回测</span>
+          <span class="card-desc">服务端直连数据回测：买卖信号状态与收益追踪</span>
+        </figcaption>
+      </figure>
+
+    </div>
+  </section>
+
+  <!-- ═══ CTA 收尾 ═══ -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <h2 class="cta-title">在轮回中，狩猎时机</h2>
+      <p class="cta-desc">多市场行情 · 情绪量化 · 行业主线 · 策略回测，一站尽览</p>
+      <a class="btn btn-primary" href="https://www.szdto.xyz/" target="_blank" rel="noopener">
+        立即体验 狩诸待To <span aria-hidden="true">→</span>
+      </a>
+      <div><a class="cta-url" href="https://www.szdto.xyz/" target="_blank" rel="noopener">www.szdto.xyz</a></div>
+    </div>
+  </section>
+
+  <!-- ═══ 页脚 ═══ -->
+  <footer class="footer wrap">
+    <span>© 2026 轮回指数 · 狩诸待To</span>
+    <div class="footer-links">
+      <a href="https://www.szdto.xyz/" target="_blank" rel="noopener">官方网站</a>
+      <a href="https://github.com/cycleindex-szdto" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </footer>
+
+  <!-- ═══ 灯箱 ═══ -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="截图放大查看">
+    <button class="lb-close" id="lb-close" aria-label="关闭">✕</button>
+    <span class="lb-counter" id="lb-counter"></span>
+    <button class="lb-nav lb-prev" id="lb-prev" aria-label="上一张">‹</button>
+    <img id="lb-img" src="" alt="" />
+    <button class="lb-nav lb-next" id="lb-next" aria-label="下一张">›</button>
+    <div class="lb-caption" id="lb-caption"></div>
+  </div>
+
+  <script>
+    /* ═══ 导航滚动描边 ═══ */
+    const nav = document.getElementById('nav');
+    const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* ═══ 画廊卡片交错入场（IntersectionObserver）═══ */
+    const cards = document.querySelectorAll('.card');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // 按同批可见序号交错延迟
+          entry.target.style.transitionDelay = `${(entries.indexOf(entry) % 4) * 0.06}s`;
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    cards.forEach((c) => io.observe(c));
+
+    /* ═══ 灯箱：打开 / 关闭 / 前后切换 / 键盘 ═══ */
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lb-img');
+    const lbCaption = document.getElementById('lb-caption');
+    const lbCounter = document.getElementById('lb-counter');
+    let lbList = [];
+    let lbIndex = -1;
+
+    function renderLb() {
+      const item = lbList[lbIndex];
+      if (!item) return;
+      lbImg.src = item.src;
+      lbImg.alt = item.alt || '';
+      lbCaption.textContent = item.caption || '';
+      lbCounter.textContent = String(lbIndex + 1).padStart(2, '0') + ' / ' + String(lbList.length).padStart(2, '0');
+    }
+
+    function openLb(startIndex) {
+      lbIndex = startIndex;
+      renderLb();
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLb() {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+      lbIndex = -1;
+    }
+
+    function stepLb(delta) {
+      if (lbIndex < 0) return;
+      lbIndex = (lbIndex + delta + lbList.length) % lbList.length;
+      renderLb();
+    }
+
+    // 由卡片构建灯箱数据源（保持画廊顺序）
+    lbList = [...cards].map((card) => {
+      const img = card.querySelector('img');
+      return {
+        src: card.dataset.src,
+        alt: img ? img.alt : '',
+        caption: card.dataset.caption || (card.querySelector('.card-title')?.textContent.trim() || '')
+      };
+    });
+
+    cards.forEach((card, i) => card.addEventListener('click', () => openLb(i)));
+
+    document.getElementById('lb-close').addEventListener('click', closeLb);
+    document.getElementById('lb-prev').addEventListener('click', (e) => { e.stopPropagation(); stepLb(-1); });
+    document.getElementById('lb-next').addEventListener('click', (e) => { e.stopPropagation(); stepLb(1); });
+
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLb(); });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLb();
+      else if (e.key === 'ArrowLeft') stepLb(-1);
+      else if (e.key === 'ArrowRight') stepLb(1);
+    });
+  </script>
+</body>
+</html>
