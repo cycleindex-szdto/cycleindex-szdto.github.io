@@ -486,7 +486,9 @@
         </span>
       </a>
       <div class="lang-switch" role="group" aria-label="Language / 语言">
-        <button class="lang-opt" type="button" data-lang="zh" aria-label="切换到中文">中</button>
+        <button class="lang-opt" type="button" data-lang="zh" aria-label="切换到简体中文">中</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-opt" type="button" data-lang="zh-tw" aria-label="切換到繁體中文">繁</button>
         <span class="lang-sep" aria-hidden="true">/</span>
         <button class="lang-opt" type="button" data-lang="en" aria-label="Switch to English">EN</button>
       </div>
@@ -788,21 +790,84 @@
         'c11alt': 'Strategy backtest records with signal states and PnL'
       };
 
+      var ZH_TW = {
+        'title': '輪迴指數 · 狩諸待To — 市場情緒量化終端',
+        'brand': '輪迴指數',
+        'brand2': '狩諸待To',
+        'dash': '——',
+        'nav.cta': '進入平台',
+        'hero.title': '輪迴指數',
+        'hero.sub': '市場情緒量化終端',
+        'hero.cta1': '進入平台',
+        'hero.cta2': '瀏覽功能',
+        's1u': '市場', 's1l': '美股 · 港股 · A 股 · 加密貨幣',
+        's2l': '行業主線強度追蹤',
+        's3l': '恐懼貪婪指數即時追蹤',
+        's4u': '視圖', 's4l': '行情 · 情緒 · 板塊 · 回測',
+        'sec.title': '終端功能一覽',
+        'sec.desc': '真實介面實截 · 點擊任意截圖可放大查看',
+        'zoom': '⤢ 放大',
+        'c1t': '市場總覽', 'c1d': '全球指數與市場寬度：六地指數卡 + 多市場漲跌結構一屏縱覽',
+        'c2t': '輪迴盤', 'c2d': '行業輪動全景：主線分排行與漲跌結構，多市場寬度同屏',
+        'c3t': '合約貪恐排行', 'c3d': '24H / 5m 雙週期貪恐評級排行，極恐到極貪一目瞭然',
+        'c4t': '股票 K 線終端', 'c4d': '專業蠟燭圖與多指標副圖，關聯財務報表與貪恐評級',
+        'c5t': '加密貨幣終端', 'c5d': '幣安即時行情：K 線、多指標副圖與貪恐儀表',
+        'c6t': '主線板塊', 'c6d': '130+ 行業主線強度排行：漲跌結構、強勢股 TOP3、資金流淨額',
+        'c7t': '行業板塊體系', 'c7d': '概念 / 行業 / 地域三維板塊全景，板塊指數與寬度一覽',
+        'c8t': '全域搜尋', 'c8d': '⌘K 喚起：股票 / ETF / 合約 / 頁面跨市場秒達',
+        'c9t': '市場溫度', 'c9d': '情緒溫度計：漲跌停結構、活躍度評分與歷史溫度走勢',
+        'c10t': '市場寬度', 'c10d': '漲跌家數結構：寬度趨勢曲線與逐日歷史分布',
+        'c11t': '策略回測', 'c11d': '伺服器直連數據回測：買賣信號狀態與收益追蹤',
+        'cta.title': '在輪迴中，狩獵時機',
+        'cta.desc': '多市場行情 · 情緒量化 · 行業主線 · 策略回測，一站盡覽',
+        'cta.btn': '立即體驗 狩諸待To',
+        'foot.copy': '© 2026 輪迴指數 · 狩諸待To',
+        'foot.site': '官方網站',
+        'c1cap': '市場總覽 · 全球指數與市場寬度',
+        'c2cap': '輪迴盤 · 行業輪動全景',
+        'c3cap': '合約貪恐排行 · 24H / 5m 雙週期',
+        'c4cap': '股票 K 線終端 · 長和 000001',
+        'c5cap': '加密貨幣 K 線 · BTC/USDT',
+        'c6cap': '主線板塊 · A 股行業主線強度排行',
+        'c7cap': '行業板塊體系 · 概念 / 行業 / 地域',
+        'c8cap': '全域搜尋 · ⌘K 跨市場直達',
+        'c9cap': '市場溫度 · 情緒溫度計',
+        'c10cap': '市場寬度 · 漲跌結構趨勢',
+        'c11cap': '策略回測 · 信號級記錄',
+        'c1alt': '市場總覽頁：道瓊斯、標普、恒生、上證等指數卡與多市場寬度面板',
+        'c2alt': '輪迴盤頁面：行業輪動塊（主線分與漲跌幅）及多市場寬度面板',
+        'c3alt': '合約貪恐排行頁：交易對列表，含 24H 貪恐、5m 貪恐、漲跌與量比',
+        'c4alt': '長和(000001)股票K線頁：日線蠟燭圖與貪恐歷史統計區間',
+        'c5alt': 'BTC USDT 加密貨幣K線頁：蠟燭圖、貪恐儀表與市場總覽',
+        'c6alt': '主線板塊頁：A 股行業主線分排行表，含漲跌結構、強勢股 TOP3',
+        'c7alt': '行業板塊體系頁：概念、行業、地域三維板塊列表與板塊指數',
+        'c8alt': '全域搜尋彈窗：輸入關鍵詞後展示股票、ETF、合約等跨市場結果',
+        'c9alt': '市場溫度頁：溫度儀表盤、漲跌停結構、歷史走勢',
+        'c10alt': '市場寬度頁：漲跌家數指標卡、寬度趨勢圖與歷史數據',
+        'c11alt': '策略回測頁：BTC、ETH、SOL 等回測記錄與持倉狀態、收益'
+      };
+
       function stored() {
         try { return localStorage.getItem(KEY); } catch (e) { return null; }
       }
       function detect() {
         var langs = navigator.languages && navigator.languages.length
           ? navigator.languages : [navigator.language || ''];
-        return langs.some(function (l) { return /^zh/i.test(l || ''); }) ? 'zh' : 'en';
+        /* 依次匹配用户语言偏好：繁体 → 简体 → 英文兜底 */
+        for (var i = 0; i < langs.length; i++) {
+          var l = langs[i] || '';
+          if (/^zh(-(TW|HK|MO|hant))?/i.test(l)) return 'zh-tw';
+          if (/^zh/i.test(l)) return 'zh';
+        }
+        return 'en';
       }
       function resolve() {
         var s = stored();
-        return (s === 'zh' || s === 'en') ? s : detect(); /* 用户选择优先，其次浏览器 */
+        return (s === 'zh' || s === 'zh-tw' || s === 'en') ? s : detect(); /* 用户选择优先，其次浏览器 */
       }
       function apply(lang) {
-        var D = lang === 'en' ? EN : ZH;
-        document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+        var D = lang === 'en' ? EN : (lang === 'zh-tw' ? ZH_TW : ZH);
+        document.documentElement.lang = { 'en': 'en', 'zh-tw': 'zh-TW' }[lang] || 'zh-CN';
         document.title = D['title'];
         document.querySelectorAll('[data-i18n]').forEach(function (el) {
           var v = D[el.getAttribute('data-i18n')];
