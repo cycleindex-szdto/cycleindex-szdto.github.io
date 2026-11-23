@@ -572,7 +572,7 @@
         </figcaption>
       </figure>
 
-      <figure class="card" data-src="images/reincarnation-cycle.png" data-i18n-caption="c2cap" data-caption="轮回盘 · 行业轮动全景">
+      <figure class="card" data-src="images/reincarnation-cycle.png" data-img-shared data-i18n-caption="c2cap" data-caption="轮回盘 · 行业轮动全景">
         <div class="card-shot">
           <img src="images/reincarnation-cycle.png" data-i18n-alt="c2alt" alt="轮回盘页面：行业轮动块（主线分与涨跌幅）及多市场宽度面板" loading="lazy" />
           <span class="card-zoom"><span data-i18n="zoom">⤢ 放大</span></span>
@@ -671,7 +671,7 @@
         </figcaption>
       </figure>
 
-      <figure class="card" data-src="images/backtest.png" data-i18n-caption="c11cap" data-caption="策略回测 · 信号级记录">
+      <figure class="card" data-src="images/backtest.png" data-img-shared data-i18n-caption="c11cap" data-caption="策略回测 · 信号级记录">
         <div class="card-shot">
           <img src="images/backtest.png" data-i18n-alt="c11alt" alt="策略回测页：BTC、ETH、SOL 等回测记录与持仓状态、收益" loading="lazy" />
           <span class="card-zoom"><span data-i18n="zoom">⤢ 放大</span></span>
@@ -883,6 +883,16 @@
         });
         document.querySelectorAll('.lang-opt').forEach(function (b) {
           b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+        });
+        /* 截图按语言切换（.en / .zh-tw 后缀）；data-img-shared 三语共用 */
+        document.querySelectorAll('figure.card').forEach(function (card) {
+          if (card.hasAttribute('data-img-shared')) return;
+          var base = card.getAttribute('data-src').replace(/(\.en|\.zh-tw)?\.png$/, '.png');
+          var v = lang === 'zh' ? base
+            : base.replace(/\.png$/, (lang === 'en' ? '.en' : '.zh-tw') + '.png');
+          card.setAttribute('data-src', v);
+          var img = card.querySelector('img');
+          if (img) img.src = v;
         });
       }
 
