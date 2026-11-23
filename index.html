@@ -88,6 +88,26 @@
       color: var(--muted); text-transform: uppercase;
     }
 
+    /* 语言切换：终端风格小 pill */
+    .lang-switch {
+      display: inline-flex; align-items: center; gap: 2px;
+      font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 3px 4px; margin-right: 14px;
+      background: rgba(148, 163, 184, 0.05);
+    }
+    .lang-opt {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font: inherit; letter-spacing: inherit;
+      padding: 3px 8px; border-radius: 5px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .lang-opt:hover { color: var(--text); }
+    .lang-opt.active {
+      color: var(--accent); background: rgba(56, 189, 248, 0.12);
+    }
+    .lang-sep { color: rgba(148, 163, 184, 0.35); font-size: 11px; }
+
     .nav-cta {
       display: inline-flex; align-items: center; gap: 7px;
       font-size: 13.5px; font-weight: 600; letter-spacing: 0.02em;
@@ -465,6 +485,11 @@
           <span class="en">SZD Cycle Index</span>
         </span>
       </a>
+      <div class="lang-switch" role="group" aria-label="Language / 语言">
+        <button class="lang-opt" type="button" data-lang="zh" aria-label="切换到中文">中</button>
+        <span class="lang-sep" aria-hidden="true">/</span>
+        <button class="lang-opt" type="button" data-lang="en" aria-label="Switch to English">EN</button>
+      </div>
       <a class="nav-cta" href="https://www.szdto.xyz/" target="_blank" rel="noopener">
         <span data-i18n="nav.cta">进入平台</span> <span aria-hidden="true">→</span>
       </a>
@@ -690,19 +715,28 @@
   </div>
 
   <script>
-    /* ═══ 静默本地化：按浏览器语言切换中英（默认中文，无切换 UI）═══ */
+    /* ═══ 本地化：默认跟随浏览器语言，用户可切换并记忆（localStorage）═══ */
     (function () {
-      var langs = navigator.languages && navigator.languages.length
-        ? navigator.languages : [navigator.language || ''];
-      var isZh = langs.some(function (l) { return /^zh/i.test(l || ''); });
-      if (isZh) return; /* 中文为默认渲染，无需替换 */
+      var KEY = 'szdto-lang';
 
-      var D = {
+      /* 中文默认文案从 DOM 快照（天然与页面同步，零手工维护） */
+      var ZH = { 'title': document.title };
+      document.querySelectorAll('[data-i18n]').forEach(function (el) {
+        ZH[el.getAttribute('data-i18n')] = el.textContent;
+      });
+      document.querySelectorAll('[data-i18n-caption]').forEach(function (el) {
+        ZH[el.getAttribute('data-i18n-caption')] = el.getAttribute('data-caption');
+      });
+      document.querySelectorAll('[data-i18n-alt]').forEach(function (el) {
+        ZH[el.getAttribute('data-i18n-alt')] = el.getAttribute('alt');
+      });
+
+      var EN = {
         'title': 'SZD Cycle Index · SZDTo — Market Sentiment Quant Terminal',
-        'nav.cta': 'Enter Platform',
         'brand': 'SZDTo',
         'brand2': 'SZDTo',
         'dash': '—',
+        'nav.cta': 'Enter Platform',
         'hero.title': 'SZD Cycle Index',
         'hero.sub': 'Market Sentiment Quant Terminal',
         'hero.cta1': 'Enter Platform',
@@ -754,19 +788,48 @@
         'c11alt': 'Strategy backtest records with signal states and PnL'
       };
 
-      document.documentElement.lang = 'en';
-      document.title = D['title'];
-      document.querySelectorAll('[data-i18n]').forEach(function (el) {
-        var v = D[el.getAttribute('data-i18n')];
-        if (v != null) el.textContent = v;
-      });
-      document.querySelectorAll('[data-i18n-caption]').forEach(function (el) {
-        var v = D[el.getAttribute('data-i18n-caption')];
-        if (v != null) el.setAttribute('data-caption', v);
-      });
-      document.querySelectorAll('[data-i18n-alt]').forEach(function (el) {
-        var v = D[el.getAttribute('data-i18n-alt')];
-        if (v != null) el.setAttribute('alt', v);
+      function stored() {
+        try { return localStorage.getItem(KEY); } catch (e) { return null; }
+      }
+      function detect() {
+        var langs = navigator.languages && navigator.languages.length
+          ? navigator.languages : [navigator.language || ''];
+        return langs.some(function (l) { return /^zh/i.test(l || ''); }) ? 'zh' : 'en';
+      }
+      function resolve() {
+        var s = stored();
+        return (s === 'zh' || s === 'en') ? s : detect(); /* 用户选择优先，其次浏览器 */
+      }
+      function apply(lang) {
+        var D = lang === 'en' ? EN : ZH;
+        document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+        document.title = D['title'];
+        document.querySelectorAll('[data-i18n]').forEach(function (el) {
+          var v = D[el.getAttribute('data-i18n')];
+          if (v != null) el.textContent = v;
+        });
+        document.querySelectorAll('[data-i18n-caption]').forEach(function (el) {
+          var v = D[el.getAttribute('data-i18n-caption')];
+          if (v != null) el.setAttribute('data-caption', v);
+        });
+        document.querySelectorAll('[data-i18n-alt]').forEach(function (el) {
+          var v = D[el.getAttribute('data-i18n-alt')];
+          if (v != null) el.setAttribute('alt', v);
+        });
+        document.querySelectorAll('.lang-opt').forEach(function (b) {
+          b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+        });
+      }
+
+      apply(resolve());
+
+      /* 用户切换：记忆并即时生效 */
+      document.querySelectorAll('.lang-opt').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var lang = this.getAttribute('data-lang');
+          try { localStorage.setItem(KEY, lang); } catch (e) { /* 隐私模式静默降级 */ }
+          apply(lang);
+        });
       });
     })();
   </script>
