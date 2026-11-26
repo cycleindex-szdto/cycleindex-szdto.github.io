@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>轮回指数 · 狩诸待To — 市场情绪量化终端</title>
-  <meta name="description" content="轮回指数（狩诸待To）——市场情绪量化终端：恐惧贪婪指数、美股/港股/A 股/加密货币行情、专业 K 线、130+ 行业主线强度、市场宽度与温度、策略回测。" />
+  <meta name="description" content="轮回指数（SZDTo Cycle Index）——多市场情绪量化终端：恐惧贪婪指数（30分钟至1周多周期）、美股/港股/A 股/加密货币专业 K 线、130+ 行业主线强度排行、市场宽度与温度、策略回测，一站式量化数据平台。" />
 
   <!-- Open Graph / 社交分享卡片 -->
   <meta property="og:type" content="website" />
@@ -14,6 +14,84 @@
   <meta property="og:image" content="https://cycleindex-szdto.github.io/images/home-market.png" />
   <meta property="og:site_name" content="轮回指数 SZDTo Cycle Index" />
   <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://cycleindex-szdto.github.io/" />
+
+  <!-- JSON-LD 结构化数据：WebSite / SoftwareApplication / Organization / FAQPage -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "SZDTo Cycle Index",
+      "alternateName": ["轮回指数", "輪迴指數", "狩诸待To", "Crypto Fear & Greed Index Terminal"],
+      "url": "https://cycleindex-szdto.github.io/",
+      "inLanguage": ["zh-CN", "zh-TW", "en"],
+      "description": "市场情绪量化终端：恐惧贪婪指数、美股/港股/A股/加密货币行情、专业K线、130+行业主线强度、市场宽度与温度、策略回测。"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "SZDTo Cycle Index",
+      "alternateName": "轮回指数",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web",
+      "url": "https://www.szdto.xyz/",
+      "description": "Multi-market sentiment quant terminal: fear & greed index across 30m-1w windows, candlestick charts for US/HK/A-share/crypto markets, 130+ industry mainline strength ranking, market breadth and temperature analytics, and server-side strategy backtesting.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "inLanguage": ["zh-CN", "zh-TW", "en"]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SZDTo Cycle Index",
+      "alternateName": "轮回指数",
+      "url": "https://www.szdto.xyz/",
+      "logo": "https://cycleindex-szdto.github.io/images/home-market.png",
+      "sameAs": [
+        "https://www.szdto.xyz/",
+        "https://github.com/cycleindex-szdto"
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "什么是轮回指数（SZDTo Cycle Index）？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "轮回指数（SZDTo Cycle Index）是一个市场情绪量化终端，覆盖美股、港股、A股与加密货币四大市场，提供恐惧贪婪指数（30分钟至1周多周期）、专业K线图、130+行业主线强度排行、市场宽度与温度、以及策略回测等数据工具，官网为 www.szdto.xyz。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "轮回指数的恐惧贪婪指数与普通 Fear & Greed Index 有何不同？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "区别在于多周期结构：主流恐惧贪婪指数只有一个日级数值，而轮回指数同时给出 30 分钟、1 小时、2 小时、4 小时、1 天、1 周六个窗口的情绪值，并计算周期一致度、趋势分、抄底分与风险分，帮助识别短期恐慌与中期趋势的背离。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "轮回指数支持哪些市场？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "支持美股、港股、A股三个股票市场与加密货币合约市场。A股覆盖 130+ 行业主线强度排行，加密货币支持币安实时K线与多周期贪恐评级。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "SZDTo Cycle Index 是免费的吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "核心的恐惧贪婪指数、行情K线、行业板块、市场宽度与温度数据可直接在 www.szdto.xyz 免费访问使用。"
+          }
+        }
+      ]
+    }
+  ]
+  </script>
 
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1120'/%3E%3Cpath d='M9 22 L14 12 L18 18 L23 8' stroke='%2338bdf8' stroke-width='2.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
 
@@ -340,6 +418,29 @@
       color: var(--accent); opacity: 0.75; margin-right: 10px;
     }
 
+    /* ═══════════════ FAQ（GEO：答案型内容）═══════════════ */
+    .faq-section { padding: 10px 0 70px; }
+    .faq-list { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .faq-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .faq-item summary {
+      cursor: pointer; list-style: none;
+      padding: 16px 22px; font-size: 15.5px; font-weight: 600;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after {
+      content: '+'; font-family: var(--mono); color: var(--accent);
+      font-size: 18px; transition: transform 0.2s ease; flex-shrink: 0;
+    }
+    .faq-item[open] summary::after { transform: rotate(45deg); }
+    .faq-item p {
+      padding: 0 22px 18px; color: var(--muted); font-size: 14.5px; line-height: 1.75;
+    }
+    .faq-item[open] { border-color: var(--border-hi); }
+
     /* ═══════════════ CTA 收尾 ═══════════════ */
     .cta-section { position: relative; padding: 110px 28px 120px; text-align: center; overflow: hidden; }
     .cta-section::before {
@@ -488,11 +589,11 @@
         </span>
       </a>
       <div class="lang-switch" role="group" aria-label="Language / 语言">
-        <button class="lang-opt" type="button" data-lang="zh" aria-label="切换到简体中文">中</button>
+        <button class="lang-opt" type="button" data-lang="zh" aria-label="中 — 切换到简体中文">中</button>
         <span class="lang-sep" aria-hidden="true">/</span>
-        <button class="lang-opt" type="button" data-lang="zh-tw" aria-label="切換到繁體中文">繁</button>
+        <button class="lang-opt" type="button" data-lang="zh-tw" aria-label="繁 — 切換到繁體中文">繁</button>
         <span class="lang-sep" aria-hidden="true">/</span>
-        <button class="lang-opt" type="button" data-lang="en" aria-label="Switch to English">EN</button>
+        <button class="lang-opt" type="button" data-lang="en" aria-label="EN — Switch to English">EN</button>
       </div>
       <a class="nav-cta" href="https://www.szdto.xyz/" target="_blank" rel="noopener">
         <span data-i18n="nav.cta">进入平台</span> <span aria-hidden="true">→</span>
@@ -687,6 +788,31 @@
     </div>
   </main>
 
+  <!-- ═══ FAQ（常见问题）═══ -->
+  <section class="faq-section wrap" id="faq">
+    <div class="section-head">
+      <h2 class="section-title" data-i18n="faq.title">常见问题</h2>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary data-i18n="faq.q1">什么是轮回指数（SZDTo Cycle Index）？</summary>
+        <p data-i18n="faq.a1">轮回指数（SZDTo Cycle Index）是一个市场情绪量化终端，覆盖美股、港股、A 股与加密货币四大市场，提供恐惧贪婪指数（30 分钟至 1 周多周期）、专业 K 线图、130+ 行业主线强度排行、市场宽度与温度、以及策略回测等数据工具，官网为 www.szdto.xyz。</p>
+      </details>
+      <details class="faq-item">
+        <summary data-i18n="faq.q2">它与普通的 Fear &amp; Greed Index 有何不同？</summary>
+        <p data-i18n="faq.a2">区别在于多周期结构：主流恐惧贪婪指数只有一个日级数值，而轮回指数同时给出 30 分钟、1 小时、2 小时、4 小时、1 天、1 周六个窗口的情绪值，并计算周期一致度、趋势分、抄底分与风险分，帮助识别短期恐慌与中期趋势的背离。</p>
+      </details>
+      <details class="faq-item">
+        <summary data-i18n="faq.q3">支持哪些市场？</summary>
+        <p data-i18n="faq.a3">支持美股、港股、A 股三个股票市场与加密货币合约市场。A 股覆盖 130+ 行业主线强度排行，加密货币支持币安实时 K 线与 24H / 5m 双周期贪恐评级。</p>
+      </details>
+      <details class="faq-item">
+        <summary data-i18n="faq.q4">是免费的吗？</summary>
+        <p data-i18n="faq.a4">核心的恐惧贪婪指数、行情 K 线、行业板块、市场宽度与温度数据可直接在 www.szdto.xyz 免费访问使用。</p>
+      </details>
+    </div>
+  </section>
+
   <!-- ═══ CTA 收尾 ═══ -->
   <section class="cta-section">
     <div class="cta-inner">
@@ -768,6 +894,15 @@
         'cta.btn': 'Launch SZDTo',
         'foot.copy': '© 2026 SZDTo Cycle Index',
         'foot.site': 'Website',
+        'faq.title': 'FAQ',
+        'faq.q1': 'What is SZDTo Cycle Index?',
+        'faq.a1': 'SZDTo Cycle Index is a multi-market sentiment quant terminal covering US stocks, HK stocks, A-shares and crypto. It provides a multi-window fear & greed index (30m to 1w), professional candlestick charts, a 130+ industry mainline strength ranking, market breadth & temperature analytics, and server-side strategy backtesting. Official site: www.szdto.xyz.',
+        'faq.q2': 'How is it different from a standard Fear & Greed Index?',
+        'faq.a2': 'A standard fear & greed index gives a single daily value. SZDTo Cycle Index publishes values across six windows — 30m, 1h, 2h, 4h, 1d and 1w — plus cycle consistency, trend score, bottom-fishing score and risk score, helping spot divergence between short-term panic and the mid-term trend.',
+        'faq.q3': 'Which markets are supported?',
+        'faq.a3': 'US stocks, HK stocks, A-shares and crypto futures. A-shares cover a 130+ industry mainline strength ranking; crypto includes real-time klines and dual-window (24H / 5m) fear & greed ratings.',
+        'faq.q4': 'Is it free?',
+        'faq.a4': 'Core fear & greed index, market klines, sectors, market breadth and temperature data are freely accessible at www.szdto.xyz.',
         'c1cap': 'Market Overview · Global Indices & Breadth',
         'c2cap': 'Cycle Board · Industry Rotation',
         'c3cap': 'Futures F&G · 24H / 5m',
@@ -825,6 +960,15 @@
         'cta.btn': '立即體驗 狩諸待To',
         'foot.copy': '© 2026 輪迴指數 · 狩諸待To',
         'foot.site': '官方網站',
+        'faq.title': '常見問題',
+        'faq.q1': '什麼是輪迴指數（SZDTo Cycle Index）？',
+        'faq.a1': '輪迴指數（SZDTo Cycle Index）是一個市場情緒量化終端，覆蓋美股、港股、A 股與加密貨幣四大市場，提供恐懼貪婪指數（30 分鐘至 1 週多週期）、專業 K 線圖、130+ 行業主線強度排行、市場寬度與溫度、以及策略回測等數據工具，官網為 www.szdto.xyz。',
+        'faq.q2': '它與普通的 Fear & Greed Index 有何不同？',
+        'faq.a2': '區別在於多週期結構：主流恐懼貪婪指數只有一個日級數值，而輪迴指數同時給出 30 分鐘、1 小時、2 小時、4 小時、1 天、1 週六個窗口的情緒值，並計算週期一致度、趨勢分、抄底分與風險分，幫助識別短期恐慌與中期趨勢的背離。',
+        'faq.q3': '支援哪些市場？',
+        'faq.a3': '支援美股、港股、A 股三個股票市場與加密貨幣合約市場。A 股覆蓋 130+ 行業主線強度排行，加密貨幣支援幣安即時 K 線與 24H / 5m 雙週期貪恐評級。',
+        'faq.q4': '是免費的嗎？',
+        'faq.a4': '核心的恐懼貪婪指數、行情 K 線、行業板塊、市場寬度與溫度數據可直接在 www.szdto.xyz 免費訪問使用。',
         'c1cap': '市場總覽 · 全球指數與市場寬度',
         'c2cap': '輪迴盤 · 行業輪動全景',
         'c3cap': '合約貪恐排行 · 24H / 5m 雙週期',

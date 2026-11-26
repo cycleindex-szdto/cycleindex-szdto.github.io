@@ -1,0 +1,39 @@
+# SZDTo Cycle Index · 轮回指数 — 官方介绍页
+# 全部页面公开，显式放行主流搜索引擎与 AI 检索爬虫
+
+User-agent: *
+Allow: /
+
+# ── 传统搜索引擎 ──
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# ── AI 检索引擎（GEO：被引用即曝光）──
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://cycleindex-szdto.github.io/sitemap.xml
