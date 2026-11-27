@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  轮回指数官方介绍页 Sitemap
+  维护规则：
+  1. 只列 https://cycleindex-szdto.github.io/ 一条。
+     /index.html 与根路径是同一页面，重复列出会浪费抓取预算，
+     并可能让 Google 报「重复网页，未选择规范版本」。
+     页面 canonical 已指向根路径，此处不再列 index.html。
+  2. lastmod 填页面内容真实更新日期，勿每次构建都改。
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://cycleindex-szdto.github.io/</loc>
-    <lastmod>2026-11-26</lastmod>
+    <lastmod>2026-11-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://cycleindex-szdto.github.io/index.html</loc>
-    <lastmod>2026-11-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
   </url>
 </urlset>
